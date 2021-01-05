@@ -31,14 +31,14 @@ const appReducer = (state = initialState, actions) => {
         arr.splice(actions.index, 1);
         return {
           ...state,
-          taskToDo: arr,
+          taskToDo: [...arr],
         };
       } else {
         arr = state.taskCompleted;
         arr.splice(actions.index, 1);
         return {
           ...state,
-          taskCompleted: arr,
+          taskCompleted: [...arr],
         };
       }
 

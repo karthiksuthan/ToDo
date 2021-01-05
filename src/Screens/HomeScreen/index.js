@@ -21,6 +21,7 @@ import {
 } from '../../Store/Actions/taskActions';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {useRef} from 'react';
+import { createRef } from 'react';
 
 const ToDoApp = (props) => {
   const [searchString, setSearchString] = useState('');
@@ -29,7 +30,7 @@ const ToDoApp = (props) => {
   const [filerToDoData, setFilterToDoData] = useState([]);
   const [filterToDoDone, setFilterToDoDone] = useState([]);
   const dispatch = useDispatch();
-  const [tileRef = useRef(null);
+  const [tileRef,setTileRef] = useState([]);
 
   useEffect(() => {
     const filterData = props.appReducer.taskToDo.filter((value) =>
@@ -40,20 +41,26 @@ const ToDoApp = (props) => {
     );
     setFilterToDoData(filterData);
     setFilterToDoDone(filterDone);
+
+  
+    setTileRef((tileRef) => (
+      Array(filterData.length).fill().map((_, i) => tileRef[i] || createRef())
+    ));
   }, [searchString, props.appReducer.taskToDo, props.appReducer.taskCompleted]);
 
   const renderFn1 = ({item, index}) => {
     return (
       <Swipeable
-        ref={tileRef}
+        ref={tileRef[index]}
         renderRightActions={() => (
           <TouchableOpacity
             style={styles.deleteWrapper}
             onPress={() => {
-              tileRef.current.close();
-              console.log('ref', tileRef.current);
-
-              // dispatch(deleteTask(index, true));
+              // console.log(index,'ref',tileRef[index])
+              // tileRef[index].current.close();
+              setTimeout(() => {
+              dispatch(deleteTask(index, true));
+              }, 1000);
             }}>
             <Image
               source={require('../../Assets/Images/dustbin.png')}
